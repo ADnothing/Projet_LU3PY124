@@ -21,6 +21,9 @@ def get_datas():
     sc = datas['seuil_bas'].values/2
     scerr = datas['seuil_baserr'].values
     
+    m = datas['marcheurs'].values/2
+    merr = datas['marcheurserr'].values
+    
     #Convertion (cf calibration)
     A1 = convert(M1)
     A1err = convert(M1err)
@@ -41,12 +44,15 @@ def get_datas():
     seuil_co = convert(sc)
     seuil_coerr = convert(scerr)
     
-    return (F, A1, A1err, A2, A2err, seuil_far, seuil_farerr, seuil_co, seuil_coerr)
+    march = convert(m)
+    marcherr = convert(merr)
+    
+    return (F, A1, A1err, A2, A2err, seuil_far, seuil_farerr, seuil_co, seuil_coerr, march, marcherr)
 
 def loi(f, sigma, v):
     return (2**(4/3))*((950/sigma)**(1/3))*v*(2*np.pi*f)**(5/3)
 
-def plot_all(F, A1, A1err, A2, A2err, seuil_far, seuil_farerr, seuil_co, seuil_coerr, Y, th):
+def plot_all(F, A1, A1err, A2, A2err, seuil_far, seuil_farerr, seuil_co, seuil_coerr, march, marcherr, Y, th):
     
     plt.errorbar(F, A1, yerr=A1err, fmt='o', label='Mesure 1')
     plt.errorbar(F, A2, yerr=A2err, fmt='o', label='Mesure 2')
@@ -74,12 +80,31 @@ def plot_all(F, A1, A1err, A2, A2err, seuil_far, seuil_farerr, seuil_co, seuil_c
     plt.errorbar(F, seuil_far, yerr=seuil_farerr, fmt='o', label="Seuil d'instabilité")
     plt.plot(F, Y, label='fit')
     plt.ylabel("Accélération ($m.s^{2}$)")
+    plt.xlabel("Fréquence (Hz)")
     plt.legend(bbox_to_anchor=(1.1, 0.75), loc='upper left', borderaxespad=0.)
     plt.show()
     
-    plt.errorbar(F, seuil_co, yerr=seuil_coerr, fmt='o', label='Seuil de coalescence')
-    plt.errorbar(F, seuil_far, yerr=seuil_farerr, fmt='o', label="Seuil d'instabilité")
+    plt.errorbar(F, seuil_co, yerr=seuil_coerr, fmt='-o', label='Seuil de coalescence')
+    plt.errorbar(F, seuil_far, yerr=seuil_farerr, fmt='-o', label="Seuil d'instabilité")
+    plt.errorbar(F, march, yerr=marcherr, fmt='-o', label="Seuil des marcheurs")
     plt.ylabel("Accélération ($m.s^{2}$)")
+    plt.xlabel("Fréquence (Hz)")
     plt.legend(bbox_to_anchor=(1.1, 0.75), loc='upper left', borderaxespad=0.)
+    plt.show()
+    
+    plt.errorbar(F, seuil_co, yerr=seuil_coerr, fmt='-o', color='black')
+    plt.errorbar(F, seuil_far, yerr=seuil_farerr, fmt='-o', color='black')
+    plt.errorbar(F, march, yerr=marcherr, fmt='-o', color='black')
+    plt.fill_between(F, seuil_far, march, color='springgreen')
+    plt.fill_between(F[F<=45], seuil_far[F<=45], seuil_co[F<=45], color='gold')
+    plt.fill_between(F[F>=45], march[F>=45], seuil_co[F>=45], color='gold')
+    plt.fill_between(F, seuil_co, color='deepskyblue')
+    plt.fill_between(F, seuil_far, np.max(seuil_far), color='lightcoral')
+    plt.text(25,20,'Instabilité de Faraday')
+    plt.text(60, 17.5,'Marcheurs')
+    plt.text(50,1,'Coalescence')
+    plt.text(45,8,'Rebonds')
+    plt.ylabel("Accélération ($m.s^{2}$)")
+    plt.xlabel("Fréquence (Hz)")
     plt.show()
 
