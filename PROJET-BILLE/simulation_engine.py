@@ -16,10 +16,32 @@ class Simulation_engine():
         self.bille=Bille()
         self.plateau=Plateau()
         self.traj=None
-        self.graphic=Graphic_engine()
+        self.graphic=Graphic_engine()  
+        self.evenements=[]
         
+    def next_step(ti):
+        if (self.bille.get_etape()==Etape.COLLE):
+            if (self.plateau.a) > g :
+                self.bille.set_etape(Etape.CHUTE)
+                #TODO
+                #self.evenements.append[self.bille.get_etape(),ti,tf,self.bille,self.plateau]
+                #resoudre a=g
+                
+        elif (self.bille.get_etape()==Etape.CHUTE):
+            #adrien
+            #tf=
+            self.bille.set_etape(Etape.CHOC)
+            if (self.bille.v)<(self.plateau.v) or (tf-ti)<10e-2:
+                self.bille.set_etape(Etape.COLLE)
+        #TODO    
+        else ():
+            self.bille.set_etape(Etape.CHOC)
         
+        #self.evenements.append[self.bille.get_etape(),ti,tf,self.bille,self.plateau]
+        
+    
     def tick(self) :
         self.time +=self.dt
         self.plateau.tick()
-        self.bille.tick()
+        self.bille.tick(t, self.plateau.z, self.plateau.v, self.plateau.a)
+    
