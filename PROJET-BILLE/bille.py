@@ -6,11 +6,9 @@ Created on Fri Feb 18 15:58:19 2022
 """
 from library import *
 
+from library import g_CST
 
-class Etape(Enum):
-     COLLE = 1
-     CHUTE_LIBRE=2
-     CHOC=3
+
 
 class Bille():
     def __init__(self,amortissement=0.5,v_i=0, z_i= 10e-1,a_i=0,etape_i=Etape.COLLE):
@@ -18,7 +16,6 @@ class Bille():
         self.a=a_i      #acceleration en m/s^2
         self.v=v_i      #vitesse en m/s
         self.z=z_i      #hauteur en m
-        self.g=9.81     #m/s²
         self.etape=etape_i
         self.traj=None
         self.trajTab=[]
@@ -29,9 +26,9 @@ class Bille():
             self.a=a
             
         def trajchute(t, z, v, a):
-            self.z=-self.g/2*t**2+self.v*t+self.z
-            self.v=-self.g*t+self.v
-            self.a=-self.g
+            self.z=-g_CST/2*t**2+self.v*t+self.z
+            self.v=-g_CST*t+self.v
+            self.a=-g_CST
             
         def trajchoc(t, z, v, a):
             self.z=z
@@ -46,8 +43,10 @@ class Bille():
     
     def set_etape(self,nouvelle_etape):
         self.etape= Etape.nouvelle_etape
-        self.traj=self.trajTab[etape.value]
+        self.traj=self.trajTab[Etape.value]
     
     def tick(self, t, z, v, a) :
         self.traj(t)
+    
+    
        
