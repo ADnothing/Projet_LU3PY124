@@ -17,3 +17,7 @@ class Etape(Enum):
 
 
 g_CST = 9.81     #m/s² 
+
+
+#bibliothèque pour l'aniamtion
+from matplotlib import animation
