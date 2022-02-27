@@ -15,7 +15,7 @@ class Plateau():
         self.w=frequence  #frequence en Hz
         
     def tick(self,t):
-        self.a=self.A * self.w**2  * math.cos(self.w*t)
-        self.v=self.A*self.w *math.cos(self.w*t)
-        self.z= self.A*math.sin(self.w*t)
+        self.a= -self.A * self.w**2  * np.sin(self.w*t)
+        self.v=self.A*self.w *np.cos(self.w*t)
+        self.z= self.A*np.sin(self.w*t)
         
