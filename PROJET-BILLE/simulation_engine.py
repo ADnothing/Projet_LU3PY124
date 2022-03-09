@@ -41,14 +41,24 @@ class Simulation_engine():
         t=np.arange(0+dt,r_poly+4*np.pi/self.plateau.w,dt)
         y=self.func_to_root(t,ti)
         idx = np.argwhere(np.diff(np.sign(y))).flatten()
+        
+        plt.plot(t,y)
+        plt.show()
 
         return t[idx[0]]+ti
     
     def zero_colle(self,ti, dt=epsilon_t):
+
+        
+        
+        
         t=ti+np.arange(dt,2*np.pi/self.plateau.w,dt)
-        y=self.plateau.A*self.plateau.w**2 *np.sin(self.plateau.w*t)
+        y=-self.plateau.A*self.plateau.w**2 *np.sin(self.plateau.w*t)
         idx = np.argwhere(np.diff(np.sign(y))).flatten()
         
+        self.plateau.tick(t)
+        plt.plot(t,self.plateau.z)
+
         self.plateau.tick(t[idx[0]]-dt)
         
         if self.plateau.a - g_CST< 0 :
@@ -57,6 +67,9 @@ class Simulation_engine():
             t=np.arange(t[idx[0]],t[idx[0]]+2*np.pi/self.plateau.w,dt)
             y=self.plateau.A*self.plateau.self.plateau.w**2 *np.sin(self.plateau.w*t)
             idx = np.argwhere(np.diff(np.sign(y))).flatten()
+            
+            plt.plot(t,y)
+            plt.show()
             return t[idx[0]]
  
 
@@ -116,7 +129,7 @@ class Simulation_engine():
     def create_events(self,nb_events=100):
         for i in range(nb_events):
             self.time=self.next_step(self.time)
-            
+        
         self.graphic.evenements=self.evenements
     
     def tick(self,t) :
