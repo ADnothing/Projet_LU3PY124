@@ -12,4 +12,4 @@ from scipy.optimize import fsolve
 MyEngine=Simulation_engine()        
 
 MyEngine.create_events(4)
-# MyEngine.graphic.render()
+MyEngine.graphic.render()

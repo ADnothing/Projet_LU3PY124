@@ -27,6 +27,9 @@ class Graphic_engine():
             bille=self.evenements[i][2]
             plateau.tick(t)
             z_b=bille.traj_r(t,plateau.z)
-            plt.plot(t,z_b,c="k")
-            plt.plot(t,plateau.z,c="r")
-            plt.show()
+            plt.plot(t,z_b,c="k",label="bille")
+            plt.plot(t,plateau.z,c="r",label="plateau")
+        # plt.legend()
+        plt.ylim(-2,2)
+        plt.show()
+        

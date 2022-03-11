@@ -7,7 +7,7 @@ Created on Fri Feb 18 15:58:07 2022
 from library import *
 
 class Plateau():
-    def __init__(self,a_i=0,v_i=0, z_i=0,amplitude=1,frequence=10):
+    def __init__(self,a_i=0,v_i=0, z_i=0,amplitude=1,frequence=100):
         self.a=a_i
         self.v=v_i
         self.z=z_i
