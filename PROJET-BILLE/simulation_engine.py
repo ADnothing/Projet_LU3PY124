@@ -37,15 +37,35 @@ class Simulation_engine():
         return -g_CST/2*t**2+self.bille.v*t+self.bille.z -self.plateau.A*np.sin(self.plateau.w*(t+ti))
 
     def zero_chute(self,ti, dt=epsilon_t):
-        r_poly = (self.bille.v+math.sqrt(self.bille.v**2+2*g_CST*self.bille.z))/g_CST
-        t=np.arange(dt,r_poly+4*np.pi/self.plateau.w,dt) #TODO faire mieux
-        y=self.func_to_root(t,ti)
-        idx = np.argwhere(np.diff(np.sign(y))).flatten()
+        #Pour revenir à l'état post modif : retirer le else (et ses instructions) puis le if (en conservatn les instructions)
+        #changement du "zéro" : amplitude du plateau
+        #premier argument de r_poly : 0+dt -> r_poly ; 2eme arg de t : r_poly*4... -> r_poly*2....
+        hauteur=self.plateau.z-self.plateau.A-self.plateau.v*2/(2*g_CST)
+        if hauteur > self.plateau.A:
+            r_poly = (self.bille.v+math.sqrt(self.bille.v**2+2*g_CST*(self.bille.z-self.plateau.A)))/g_CST
+            t=np.arange(r_poly,r_poly+2*np.pi/self.plateau.w,dt)
+            y=self.func_to_root(t,ti)
+            idx = np.argwhere(np.diff(np.sign(y))).flatten()
+        else:
+            t=np.arange(dt,dt+2*np.pi/self.plateau.w,dt)
+            y=self.func_to_root(t,ti)
+            idx = np.argwhere(np.diff(np.sign(y))).flatten()
         
-        # plt.plot(t,y)
-        # plt.show()
+        plt.plot(t,y)
+        plt.show()
 
         return t[idx[0]]+ti
+    
+    # def zero_chute(self,ti, dt=epsilon_t):
+        # r_poly = (self.bille.v+math.sqrt(self.bille.v**2+2*g_CST*self.bille.z))/g_CST
+        # t=np.arange(dt,r_poly+4*np.pi/self.plateau.w,dt) #TODO faire mieux
+        # y=self.func_to_root(t,ti)
+        # idx = np.argwhere(np.diff(np.sign(y))).flatten()
+        
+        # # plt.plot(t,y)
+        # # plt.show()
+
+        # return t[idx[0]]+ti
     
     # retourne le momoent de décollage
     def zero_colle(self,ti, dt=epsilon_t):
