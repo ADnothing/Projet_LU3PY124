@@ -37,24 +37,36 @@ class Simulation_engine():
         return -g_CST/2*t**2+self.bille.v*t+self.bille.z -self.plateau.A*np.sin(self.plateau.w*(t+ti))
 
     def zero_chute(self,ti, dt=epsilon_t):
-        #Pour revenir à l'état post modif : retirer le else (et ses instructions) puis le if (en conservatn les instructions)
+        #Pour revenir à l'état post modif : retirer le else (et ses instructions) puis le if (en conservant les instructions)
         #changement du "zéro" : amplitude du plateau
         #premier argument de r_poly : 0+dt -> r_poly ; 2eme arg de t : r_poly*4... -> r_poly*2....
-        hauteur=self.plateau.z-self.plateau.A-self.plateau.v*2/(2*g_CST)
-        if hauteur > self.plateau.A:
-            r_poly = (self.bille.v+math.sqrt(self.bille.v**2+2*g_CST*(self.bille.z-self.plateau.A)))/g_CST
-            t=np.arange(r_poly,r_poly+2*np.pi/self.plateau.w,dt)
-            y=self.func_to_root(t,ti)
-            idx = np.argwhere(np.diff(np.sign(y))).flatten()
-        else:
-            t=np.arange(dt,dt+2*np.pi/self.plateau.w,dt)
-            y=self.func_to_root(t,ti)
-            idx = np.argwhere(np.diff(np.sign(y))).flatten()
+        # hauteur=self.plateau.z-self.plateau.A-self.plateau.v*2/(2*g_CST)
+        # if hauteur > self.plateau.A:
+        #     r_poly = (self.bille.v+math.sqrt(self.bille.v**2+2*g_CST*(self.bille.z-self.plateau.A)))/g_CST
+        #     t=np.arange(r_poly,r_poly+4*np.pi/self.plateau.w,dt)
+        #     y=self.func_to_root(t,ti)
+        #     idx = np.argwhere(np.diff(np.sign(y))).flatten()
+        # else:
+        #     t=np.arange(dt,dt+4*np.pi/self.plateau.w,dt)
+        #     y=self.func_to_root(t,ti)
+        #     idx = np.argwhere(np.diff(np.sign(y))).flatten()
         
-        plt.plot(t,y)
+        # plt.plot(t,self.bille.traj_r(t,self.plateau.z))
+        # self.plateau.tick(t)
+        # plt.plot(t,self.plateau.z)
+        # plt.show()
+        t=ti
+        res=1
+        while (res>=0):
+            t +=dt
+            res = self.func_to_root(t,0)*self.func_to_root(t,dt)
+            if self.func_to_root(t,0) <0 :
+                print("haaaaaa")
+        time=np.arange(ti,t,dt)
+        plt.plot(time,self.plateau.traj_r(time))
+        plt.plot(time,self.bille.traj_r(time,self.plateau.traj_r(time)))
         plt.show()
-
-        return t[idx[0]]+ti
+        return t
     
     # def zero_chute(self,ti, dt=epsilon_t):
         # r_poly = (self.bille.v+math.sqrt(self.bille.v**2+2*g_CST*self.bille.z))/g_CST
@@ -142,6 +154,7 @@ class Simulation_engine():
     
     def next_step(self,t):
         print(self.evenements[-1][0] , " : ",self.evenements[-1][1] )
+        self.graphic_engine.render()
         if self.isColle():
             if self.is_decollage():
                 tf=self.zero_colle(t)

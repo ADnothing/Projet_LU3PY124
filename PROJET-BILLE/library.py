@@ -15,5 +15,5 @@ class Etape(Enum):
      CHUTE=2
      CHOC=3
 
-epsilon_t = 10e-7
+epsilon_t = 10e-5
 g_CST = 9.81     #m/s² 

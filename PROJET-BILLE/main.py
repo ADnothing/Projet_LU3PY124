@@ -9,7 +9,7 @@ from simulation_engine import Simulation_engine
 from scipy.optimize import fsolve
 
 
-MyEngine=Simulation_engine()        
+MyEngine=Simulation_engine()
 
-MyEngine.create_events(5)
+MyEngine.create_events(2)
 MyEngine.graphic.render()

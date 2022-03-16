@@ -7,7 +7,7 @@ Created on Fri Feb 18 15:58:07 2022
 from library import *
 
 class Plateau():
-    def __init__(self,a_i=0,v_i=0, z_i=0,amplitude=1,frequence=10):
+    def __init__(self,a_i=0,v_i=0, z_i=0,amplitude=1,frequence=5):
         self.a=a_i
         self.v=v_i
         self.z=z_i
@@ -19,3 +19,5 @@ class Plateau():
         self.v=self.A*self.w *np.cos(self.w*t)
         self.z= self.A*np.sin(self.w*t)
         
+    def traj_r(self,t):
+        return self.A*np.sin(self.w*t)
