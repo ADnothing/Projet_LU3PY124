@@ -40,12 +40,15 @@ class Simulation_engine():
         
         t=0
         res=1
-        while (res>=0 and (t < 2*np.pi*2/self.plateau.w)):
+        while (res>0 and (t < 2*np.pi*2/self.plateau.w)):
             t +=dt
             res = self.func_to_root(t,ti)
+            
 
-        t=-dt
+        t -= dt
+
         time=np.arange(0,t,dt)
+        print(t)
         plt.plot(time+ti,self.plateau.traj_r(time+ti))
         plt.plot(time+ti,self.bille.traj_r(time,self.plateau.traj_r(time+ti)))
         plt.grid()
@@ -59,13 +62,6 @@ class Simulation_engine():
 
             
         t= ti+ np.arcsin(g_CST/(self.plateau.A*self.plateau.w**2))/self.plateau.w
-        # time=np.arange(ti,t,dt)
-        # plt.plot(time,self.plateau.a_r(time), label="a")
-        # plt.plot(time,self.plateau.traj_r(time), label="z")
-        # plt.plot(time,self.bille.traj_r(time,self.plateau.traj_r(time)))
-        # plt.legend()
-        # plt.title("a de colle")
-        # plt.show()
         return t
  
 
