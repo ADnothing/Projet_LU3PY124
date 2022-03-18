@@ -46,8 +46,8 @@ class Bille():
             return z
             
             
-        def trajchute_r(t, z):
-            return -g_CST/2*t**2+self.v*t+self.z
+        def trajchute_r(t,z):
+            return -g_CST/2*t**2+self.v*t +self.z
 
             
         def trajchoc_r(t, z):
