@@ -15,9 +15,10 @@ from graphic_engine import Graphic_engine
 from copy import deepcopy
 
 class Simulation_engine():
-    def __init__(self,timeStep=10e-4):
+    def __init__(self,timeStep=epsilon_t):
         self.dt=timeStep
         self.bille=Bille()
+        self.bille.init()
         self.plateau=Plateau()
         self.time= 0
         self.traj=None
@@ -40,29 +41,40 @@ class Simulation_engine():
         
         t=0
         res=1
-        while (res>0 and (t < 2*np.pi*2/self.plateau.w)):
+        while (res>0 and (t < 10*np.pi*2/self.plateau.w)):
             t +=dt
             res = self.func_to_root(t,ti)
             
 
         t -= dt
-
-        time=np.arange(0,t,dt)
-        print(t)
-        plt.plot(time+ti,self.plateau.traj_r(time+ti))
-        plt.plot(time+ti,self.bille.traj_r(time,self.plateau.traj_r(time+ti)))
-        plt.grid()
-        plt.title("z de chute, tf="+str(t+ti) )
-        plt.show()
+        # print("calcul, v=",self.bille.v)
+        # time=np.arange(0,t+np.pi/(self.plateau.w*4),dt)
+        # plt.plot(time+ti,self.plateau.traj_r(time+ti))
+        # plt.plot(time+ti,self.bille.traj_r(time,self.plateau.traj_r(time+ti)))
+        # plt.scatter(ti+t,self.bille.traj_r(t,self.plateau.traj_r(time+ti)))
+        # plt.grid()
+        # plt.title("tf="+str(t)+"vb0="+str(self.bille.v)+"vp0="+str(self.plateau.v) )
+        # plt.show()
         return t+ti
 
-    
+    def func2(self, ti,t):
+        return -self.plateau.w**2 *self.plateau.A*np.sin(self.plateau.w*(t+ti))-g_CST
+        
+        
+        
     # retourne le momoent de décollage
     def zero_colle(self,ti, dt=epsilon_t):
-
+        # t=0
+        # res=1
+        # while (res>0 and (t < 10*np.pi*2/self.plateau.w)):
+        #     t +=dt
+        #     res = self.func2(ti,t)*self.func2(ti,t+dt)
             
-        t= ti+ np.arcsin(g_CST/(self.plateau.A*self.plateau.w**2))/self.plateau.w
-        return t
+
+        # t -= dt
+            
+        t= math.asin(g_CST/(self.plateau.A*self.plateau.w**2))/self.plateau.w
+        return t+ti
  
 
     def setColle(self,ti,tf):
@@ -72,7 +84,6 @@ class Simulation_engine():
 
     def setChute(self,ti,tf):
         self.tick(ti,tf)
-
         self.bille.set_etape(Etape.CHUTE)
         self.evenements.append([Etape.CHUTE.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
         
@@ -82,21 +93,24 @@ class Simulation_engine():
         
         tf=self.zero_chute(ti)
         self.tick(ti,tf)
-        print("bille et plateau",self.bille.z,self.plateau.z)
+        # print("bille et plateau",self.bille.z,self.plateau.z)
 
         self.bille.set_etape(Etape.CHOC)
+        # print("avant choc v=",self.bille.v)
         self.tick(ti,tf)
+        # print("apres choc v=",self.bille.v)
         self.evenements.append([Etape.CHOC.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
 
-        if (self.bille.v)<(self.plateau.v) or (tf-ti)<10e-2:
+        if (self.bille.v)<=(self.plateau.v) or (tf-ti)<1e-2:
             self.setColle(ti,tf)
         else : 
-            self.setChute(ti,tf)
+            self.bille.set_etape(Etape.CHUTE)
+            self.evenements.append([Etape.CHUTE.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
         return tf
 
     
     def next_step(self,t):
-        print(self.evenements[-1][0] , " : ",self.evenements[-1][1] )
+        # print(self.evenements[-1][0] , " : ",self.evenements[-1][1] )
         # self.graphic.render()
         if self.isColle():
             if self.is_decollage():

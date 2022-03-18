@@ -31,15 +31,14 @@ class Graphic_engine():
             plateau.tick(t)
             z_b=bille.traj_r(t_res,plateau.z)
             if (self.evenements[i][0] =='CHOC'):
-                print(bille.z)
                 plt.scatter(ti,bille.z,c="k",marker='o',label="bille")
                 plt.title(bille.z)
-                # plt.show()
             else:
                 plt.plot(t,z_b,c="k",label="bille")
                 plt.plot(t,plateau.z,c="r",label="plateau")
         # plt.legend()
-        plt.ylim(-2,2)
+        # plt.xlim(3.4,3.7)
+        # plt.ylim(-1,0)
         plt.show()
         
     # def render(self):

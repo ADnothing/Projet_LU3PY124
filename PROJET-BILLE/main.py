@@ -11,5 +11,5 @@ from scipy.optimize import fsolve
 
 MyEngine=Simulation_engine()
 
-MyEngine.create_events(5)
+MyEngine.create_events(100)
 MyEngine.graphic.render()
