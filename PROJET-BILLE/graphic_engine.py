@@ -30,15 +30,23 @@ class Graphic_engine():
             
             plateau.tick(t)
             z_b=bille.traj_r(t_res,plateau.z)
-            if (self.evenements[i][0] =='CHOC'):
-                plt.scatter(ti,bille.z,c="k",marker='o',label="bille")
-                plt.title(bille.z)
-            else:
+            if (self.evenements[i][0] !='CHOC'):
+                if self.evenements[i][0] =='CHUTE' :
+                    plt.scatter(ti,bille.z,c="k",marker='x',label="bille")
+
                 plt.plot(t,z_b,c="k",label="bille")
                 plt.plot(t,plateau.z,c="r",label="plateau")
+
+                # plt.plot(t,plateau.a+g_CST,c="purple",label="plateau")
+
+
+            else :
+                plt.scatter(ti,bille.z,c="k",marker='o',label="bille")
+                
         # plt.legend()
         # plt.xlim(3.4,3.7)
-        # plt.ylim(-1,0)
+        # plt.ylim(-plateau.A ,plateau.A )
+        plt.grid()
         plt.show()
         
     # def render(self):

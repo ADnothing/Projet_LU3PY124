@@ -35,7 +35,7 @@ class Simulation_engine():
         return abs(self.plateau.A*self.plateau.w**2)  > g_CST
     
     def func_to_root(self,t,ti):
-        return -g_CST/2*t**2+self.bille.v*t+self.bille.z -self.plateau.A*np.sin(self.plateau.w*(t+ti))
+        return -g_CST/2*t**2+self.bille.v*t+self.bille.z -self.plateau.A*np.cos(self.plateau.w*(t+ti))
 
     def zero_chute(self,ti, dt=epsilon_t):
         
@@ -58,23 +58,45 @@ class Simulation_engine():
         return t+ti
 
     def func2(self, ti,t):
-        return -self.plateau.w**2 *self.plateau.A*np.sin(self.plateau.w*(t+ti))-g_CST
+        return -self.plateau.w**2 *self.plateau.A*np.cos(self.plateau.w*(t+ti))+g_CST
         
         
         
     # retourne le momoent de décollage
     def zero_colle(self,ti, dt=epsilon_t):
         # t=0
-        # res=1
-        # while (res>0 and (t < 10*np.pi*2/self.plateau.w)):
+        # res=-1
+        # while (res<0 and (t < 10*np.pi*2/self.plateau.w)):
         #     t +=dt
-        #     res = self.func2(ti,t)*self.func2(ti,t+dt)
+        #     res = self.func2(ti,t)
+        #     print(res)
             
 
         # t -= dt
+        # return  ti + t*
+                
+
+        beta= math.acos(g_CST/(self.plateau.A*self.plateau.w**2))/self.plateau.w
+        print(ti)
+        k0=np.floor(self.plateau.w*(ti+beta)/(2*np.pi))+1
+        print(k0)
+        tf= np.pi*2*(k0)/(self.plateau.w)-beta
+        print(tf)
+        return tf
+        
+        
+        # alpha= (self.plateau.w*ti) %(2*np.pi)
+        
+        # return  ti + beta
+
+        
+        # if np.sin(alpha)>np.sin(beta):
+        #     beta = np.pi -beta
+        # elif (alpha > beta):
+        #     beta = 2*np.pi +beta
             
-        t= math.asin(g_CST/(self.plateau.A*self.plateau.w**2))/self.plateau.w
-        return t+ti
+        # dt= 1/self.plateau.w *(beta)
+        # return ti+dt
  
 
     def setColle(self,ti,tf):
@@ -129,6 +151,8 @@ class Simulation_engine():
     def create_events(self,nb_events=100):
         for i in range(nb_events):
             self.time=self.next_step(self.time)
+            
+        #TODO self.clean()  
         
         self.graphic.evenements = self.evenements
     
