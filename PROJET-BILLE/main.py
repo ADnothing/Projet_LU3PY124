@@ -8,8 +8,15 @@ from library import *
 from simulation_engine import Simulation_engine
 from scipy.optimize import fsolve
 
+freqx=[]
+h=[]
+for freq in np.arange(16, 25, 0.5):
+    MyEngine=Simulation_engine(a=1e-3,f=freq)
 
-MyEngine=Simulation_engine(a=2e-3,f=20)
+    MyEngine.create_events(200)
+    hmean=MyEngine.graphic.render(phase=0)
+    for i in range(len(hmean)):
+        freqx.append(freq)
+        h.append(hmean[i])
 
-MyEngine.create_events(15)
-MyEngine.graphic.render()
+plt.scatter(freqx, h)
