@@ -118,10 +118,15 @@ class Graphic_engine():
         # plt.ylim(-1,0)
         plt.show()
         
+        t2=np.concatenate((self.t_maxi[1:],[0]))
+        self.dt=t2-self.t_maxi
+        self.dt=self.dt[:-1]
+        
+        self.dta=np.array(self.dt[:math.floor(len(self.dt)/periode)*periode])
+        self.dta=self.dta.reshape(math.floor(len(self.dt)/periode), periode)
+        self.dtamean=self.La.mean(axis=0)
+        
         if phase:
-            t2=np.concatenate((self.t_maxi[1:],[0]))
-            dt=t2-self.t_maxi
-            dt=dt[:-1]
             
             plt.scatter(dt, self.z_maxi[:-1]) 
             plt.xlabel("Différence temporelle entre deux rebonds (s)")
@@ -130,7 +135,7 @@ class Graphic_engine():
             plt.ylim(0, 0.01)
             plt.show()
 
-        return self.Lamean
+        return self.Lamean, self.dtamean
         
         # self.Lamean, self.Lastd
     # def render(self):

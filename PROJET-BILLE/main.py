@@ -10,13 +10,18 @@ from scipy.optimize import fsolve
 
 freqx=[]
 h=[]
-for freq in np.arange(16, 25, 0.5):
-    MyEngine=Simulation_engine(a=1e-3,f=freq)
+dt=[]
+for freq in np.linspace(1e-3, 5e-2, 20):
+    MyEngine=Simulation_engine(a=freq,f=20)
 
-    MyEngine.create_events(200)
-    hmean=MyEngine.graphic.render(phase=0)
-    for i in range(len(hmean)):
+    MyEngine.create_events(50)
+    hmean, dtmean=MyEngine.graphic.render(phase=0)
+    # for i in range(len(hmean)):
+    #     freqx.append(freq)
+    #     h.append(hmean[i])
+    for i in range(len(dtmean)):
         freqx.append(freq)
-        h.append(hmean[i])
+        dt.append(dtmean[i]*freq)
 
-plt.scatter(freqx, h)
+# plt.scatter(freqx, h)
+plt.scatter(freqx, dt)
