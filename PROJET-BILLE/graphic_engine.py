@@ -32,7 +32,7 @@ class Graphic_engine():
             z_b=bille.traj_r(t_res,plateau.z)
             if (self.evenements[i][0] !='CHOC'):
                 if self.evenements[i][0] =='CHUTE' :
-                    plt.scatter(ti,bille.z,c="k",marker='x',label="bille")
+                    plt.scatter(ti,bille.z,c="k",marker='+',label="bille")
 
                 plt.plot(t,z_b,c="k",label="bille")
                 plt.plot(t,plateau.z,c="r",label="plateau")
@@ -41,11 +41,11 @@ class Graphic_engine():
 
 
             else :
-                plt.scatter(ti,bille.z,c="k",marker='o',label="bille")
+                plt.scatter(ti,bille.z,c="blue",marker='x',label="choc")
                 
         # plt.legend()
         # plt.xlim(3.4,3.7)
-        # plt.ylim(-plateau.A ,plateau.A )
+        # plt.ylim(-plateau.A ,1.5*plateau.A )
         plt.grid()
         plt.show()
         

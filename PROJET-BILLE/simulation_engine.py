@@ -15,11 +15,11 @@ from graphic_engine import Graphic_engine
 from copy import deepcopy
 
 class Simulation_engine():
-    def __init__(self,timeStep=epsilon_t):
+    def __init__(self,timeStep=epsilon_t,a=8e-3,f=20):
         self.dt=timeStep
         self.bille=Bille()
         self.bille.init()
-        self.plateau=Plateau()
+        self.plateau=Plateau(amplitude=a,frequence=f)
         self.time= 0
         self.traj=None
         self.graphic=Graphic_engine(timeStep)
@@ -77,11 +77,11 @@ class Simulation_engine():
                 
 
         beta= math.acos(g_CST/(self.plateau.A*self.plateau.w**2))/self.plateau.w
-        print(ti)
+        # print(ti)
         k0=np.floor(self.plateau.w*(ti+beta)/(2*np.pi))+1
-        print(k0)
+        # print(k0)
         tf= np.pi*2*(k0)/(self.plateau.w)-beta
-        print(tf)
+        # print(tf)
         return tf
         
         
