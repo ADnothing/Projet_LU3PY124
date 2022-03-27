@@ -8,6 +8,7 @@ Created on Fri Feb 18 16:01:05 2022
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.signal
 #bille
 from enum import Enum
 class Etape(Enum):
@@ -15,9 +16,5 @@ class Etape(Enum):
      CHUTE=2
      CHOC=3
 
-
+epsilon_t = 1e-5
 g_CST = 9.81     #m/s² 
-
-
-#bibliothèque pour l'aniamtion
-from matplotlib import animation
