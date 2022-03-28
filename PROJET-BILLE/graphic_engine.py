@@ -128,7 +128,7 @@ class Graphic_engine():
         
         if phase:
             
-            plt.scatter(dt, self.z_maxi[:-1]) 
+            plt.scatter(self.dt, self.z_maxi[:-1]) 
             plt.xlabel("Différence temporelle entre deux rebonds (s)")
             plt.ylabel("Hauteur du rebond (m)")
             plt.xlim(0, 0.1)

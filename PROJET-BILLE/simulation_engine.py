@@ -41,7 +41,8 @@ class Simulation_engine():
         
         t=0
         res=1
-        while (res>0 and (t < 10*np.pi*2/self.plateau.w)):
+        while (res>0):
+            # and (t < 10*np.pi*2/self.plateau.w)
             t +=dt
             res = self.func_to_root(t,ti)
             
@@ -124,7 +125,17 @@ class Simulation_engine():
         self.evenements.append([Etape.CHOC.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
 
         if (self.bille.v)<=(self.plateau.v) or (tf-ti)<1e-2:
-            self.setColle(ti,tf)
+            
+            self.evenements.pop()
+            tf=self.evenements[-1][1]
+            self.evenements[-1][0]=Etape.COLLE.name
+            # self.time=
+            self.evenements[-1][2].z=self.evenements[-1][3].z
+            self.evenements[-1][2].v=self.evenements[-1][3].v
+            self.evenements[-1][2].a=self.evenements[-1][3].a
+            self.evenements[-1][2].set_etape(Etape.COLLE)
+            self.bille.set_etape(Etape.COLLE)
+            
         else : 
             self.bille.set_etape(Etape.CHUTE)
             self.evenements.append([Etape.CHUTE.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
