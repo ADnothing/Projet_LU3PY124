@@ -11,7 +11,7 @@ from library import g_CST
 
 
 class Bille():
-    def __init__(self,amortissement=0.1,v_i=0, z_i= 1e-3,a_i=0,etape_i=Etape.COLLE):
+    def __init__(self,amortissement=0.53,v_i=-0.3, z_i= 6e-3,a_i=0,etape_i=Etape.CHUTE):
         self.mu=amortissement    #coeff d'amortissement sans unité
         self.a=a_i      #acceleration en m/s^2
         self.v=v_i      #vitesse en m/s
