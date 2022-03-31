@@ -8,7 +8,8 @@ from library import *
 from simulation_engine import Simulation_engine
 from scipy.optimize import fsolve
 
-MyEngine=Simulation_engine(a=0.46e-3,f=30)
+MyEngine=Simulation_engine(a=0.46e-3,f=30,vi=-0.3,ei=Etape.CHUTE,zi=6e-3)
+
 MyEngine.create_events(20)
 hmean, dtmean, z_bs, z_p, ttot=MyEngine.graphic.render(phase=1)
 

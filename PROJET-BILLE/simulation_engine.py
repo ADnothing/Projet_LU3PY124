@@ -15,9 +15,9 @@ from graphic_engine import Graphic_engine
 from copy import deepcopy
 
 class Simulation_engine():
-    def __init__(self,timeStep=epsilon_t,a=8e-3,f=20):
+    def __init__(self,timeStep=epsilon_t,a=8e-3,f=20,vi=-0.3,ei=Etape.CHUTE,zi=6e-3):
         self.dt=timeStep
-        self.bille=Bille()
+        self.bille=Bille(v_i=vi, z_i= zi,etape_i=ei)
         self.bille.init()
         self.plateau=Plateau(amplitude=a,frequence=f)
         self.time= 0
