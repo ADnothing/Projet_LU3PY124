@@ -124,7 +124,7 @@ class Simulation_engine():
         # print("apres choc v=",self.bille.v)
         self.evenements.append([Etape.CHOC.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
 
-        if (self.bille.v)<=(self.plateau.v) :
+        if ((self.bille.v)<=(self.plateau.v) ):
             # or (tf-ti)<1e-2
             
             self.evenements.pop()

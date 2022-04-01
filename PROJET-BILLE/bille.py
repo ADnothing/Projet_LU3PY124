@@ -47,6 +47,7 @@ class Bille():
         
     def trajchoc_r(self,t, z):
         return z
+
     
     def init(self):
         

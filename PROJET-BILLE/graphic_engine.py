@@ -20,7 +20,7 @@ class Graphic_engine():
         self.La=np.array([])
         self.Lamean=np.array([])
         self.Lastd=np.array([])
-    
+
     def final(self,z_bille,z_plateau,t):
         plt.plot(t,z_bille,c="k")
         plt.plot(t,z_plateau,c="r")
@@ -93,11 +93,12 @@ class Graphic_engine():
             if (self.evenements[i][0] =='CHOC'):
                 plt.scatter(ti,bille.z,c="k",marker='o',label="bille")
                 plt.title(bille.z)
+
                 
             elif (self.evenements[i][0] =='COLLE'):
                 plt.plot(t,z_b,c="k",label="bille")
                 plt.plot(t,plateau.z,c="r",label="plateau")
-                
+
             else : #état chute
                 if len(z_b)!=0:
                     plt.plot(t,z_b,c="k",label="bille")
