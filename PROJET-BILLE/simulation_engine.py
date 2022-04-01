@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Feb 18 15:57:48 2022
-
+S
 @author: zways
 """
 from library import *
@@ -12,16 +12,18 @@ import math
 from bille import Bille
 from plateau import Plateau
 from graphic_engine import Graphic_engine
+from copy import deepcopy
 
 class Simulation_engine():
-    def __init__(self,timeStep=10e-4):
+    def __init__(self,timeStep=epsilon_t,a=8e-3,f=20,vi=-0.3,ei=Etape.CHUTE,zi=6e-3):
         self.dt=timeStep
-        self.time=0
-        self.bille=Bille()
-        self.plateau=Plateau(frequence=10)
+        self.bille=Bille(v_i=vi, z_i= zi,etape_i=ei)
+        self.bille.init()
+        self.plateau=Plateau(amplitude=a,frequence=f)
+        self.time= 0
         self.traj=None
         self.graphic=Graphic_engine(timeStep)
-        self.evenements=[[self.bille.get_etape(),0,self.bille,self.plateau]]
+        self.evenements=[[self.bille.get_etape(),0,deepcopy(self.bille),deepcopy(self.plateau)]]
         
     def isColle(self):
         return self.bille.get_etape()==Etape.COLLE.name
@@ -30,104 +32,128 @@ class Simulation_engine():
         return self.bille.get_etape()==Etape.CHUTE.name
         
     def is_decollage(self):
-        return self.plateau.A*self.plateau.w**2  > g_CST
+        return abs(self.plateau.A*self.plateau.w**2)  > g_CST
     
     def func_to_root(self,t,ti):
-        return -g_CST/2*t**2+self.bille.v*t+self.bille.z -self.plateau.A*np.sin(self.plateau.w*(t+ti))
+        return -g_CST/2*t**2+self.bille.v*t+self.bille.z -self.plateau.A*np.cos(self.plateau.w*(t+ti))
 
     def zero_chute(self,ti, dt=epsilon_t):
-        print(self.bille.v**2+2*g_CST*self.bille.z)
-        #Pour revenir à l'état post modif : retirer le else (et ses instructions) puis le if (en conservatn les instructions)
-        #changement du "zéro" : amplitude du plateau
-        #premier argument de r_poly : 0+dt -> r_poly ; 2eme arg de t : r_poly*4... -> r_poly*2....
-        if self.bille.v/g_CST > self.plateau.A:
-            r_poly = (self.bille.v+math.sqrt(self.bille.v**2+2*g_CST*(self.bille.z-self.plateau.A)))/g_CST
-            t=np.arange(r_poly,r_poly+2*np.pi/self.plateau.w,dt)
-            y=self.func_to_root(t,ti)
-            idx = np.argwhere(np.diff(np.sign(y))).flatten()
-        else:
-            t=np.arange(dt,dt+2*np.pi/self.plateau.w,dt)
-            y=self.func_to_root(t,ti)
-            idx = np.argwhere(np.diff(np.sign(y))).flatten()
         
-        plt.plot(t,y)
-        plt.show()
-
-        return t[idx[0]]+ti
-    
-    def zero_colle(self,ti, dt=epsilon_t):
-
-        
-        
-        
-        t=ti+np.arange(dt,2*np.pi/self.plateau.w,dt)
-        y=-self.plateau.A*self.plateau.w**2 *np.sin(self.plateau.w*t)
-        idx = np.argwhere(np.diff(np.sign(y))).flatten()
-        
-        self.plateau.tick(t)
-        plt.plot(t,self.plateau.z)
-
-        self.plateau.tick(t[idx[0]]-dt)
-        
-        if self.plateau.a - g_CST< 0 :
-            return t[idx[0]]
-        else :
-            t=np.arange(t[idx[0]],t[idx[0]]+2*np.pi/self.plateau.w,dt)
-            y=self.plateau.A*self.plateau.self.plateau.w**2 *np.sin(self.plateau.w*t)
-            idx = np.argwhere(np.diff(np.sign(y))).flatten()
+        t=0
+        res=1
+        while (res>0):
+            # and (t < 10*np.pi*2/self.plateau.w)
+            t +=dt
+            res = self.func_to_root(t,ti)
             
-            plt.plot(t,y)
-            plt.show()
-            return t[idx[0]]
+
+        t -= dt
+        # print("calcul, v=",self.bille.v)
+        # time=np.arange(0,t+np.pi/(self.plateau.w*4),dt)
+        # plt.plot(time+ti,self.plateau.traj_r(time+ti))
+        # plt.plot(time+ti,self.bille.traj_r(time,self.plateau.traj_r(time+ti)))
+        # plt.scatter(ti+t,self.bille.traj_r(t,self.plateau.traj_r(time+ti)))
+        # plt.grid()
+        # plt.title("tf="+str(t)+"vb0="+str(self.bille.v)+"vp0="+str(self.plateau.v) )
+        # plt.show()
+        return t+ti
+
+    def func2(self, ti,t):
+        return -self.plateau.w**2 *self.plateau.A*np.cos(self.plateau.w*(t+ti))+g_CST
+        
+        
+        
+    # retourne le momoent de décollage
+    def zero_colle(self,ti, dt=epsilon_t):
+        # t=0
+        # res=-1
+        # while (res<0 and (t < 10*np.pi*2/self.plateau.w)):
+        #     t +=dt
+        #     res = self.func2(ti,t)
+        #     print(res)
+            
+
+        # t -= dt
+        # return  ti + t*
+                
+
+        beta= math.acos(g_CST/(self.plateau.A*self.plateau.w**2))/self.plateau.w
+        # print(ti)
+        k0=np.floor(self.plateau.w*(ti+beta)/(2*np.pi))+1
+        # print(k0)
+        tf= np.pi*2*(k0)/(self.plateau.w)-beta
+        # print(tf)
+        return tf
+        
+        
+        # alpha= (self.plateau.w*ti) %(2*np.pi)
+        
+        # return  ti + beta
+
+        
+        # if np.sin(alpha)>np.sin(beta):
+        #     beta = np.pi -beta
+        # elif (alpha > beta):
+        #     beta = 2*np.pi +beta
+            
+        # dt= 1/self.plateau.w *(beta)
+        # return ti+dt
  
 
-    def setColle(self,ti):
-        self.tick(ti)
-
-        # self.plateau.tick(ti)
-        # self.bille.tick(ti,self.plateau.z,self.plateau.v,self.plateau.a)
+    def setColle(self,ti,tf):
+        self.tick(ti,tf)
         self.bille.set_etape(Etape.COLLE)
-        self.evenements.append([Etape.COLLE.name,ti,self.bille,self.plateau])
+        self.evenements.append([Etape.COLLE.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
 
-    def setChute(self,ti):
-        self.tick(ti)
-        # self.plateau.tick(ti)
-        # self.bille.tick(ti,self.plateau.z,self.plateau.v,self.plateau.a)
+    def setChute(self,ti,tf):
+        self.tick(ti,tf)
         self.bille.set_etape(Etape.CHUTE)
-        self.evenements.append([Etape.CHUTE.name,ti,self.bille,self.plateau])
+        self.evenements.append([Etape.CHUTE.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
+        
         #resoudre a=g
         
     def setChoc(self,ti):
         
         tf=self.zero_chute(ti)
-        self.tick(tf)
-        # self.plateau.tick(tf)
-        # self.bille.tick(tf,self.plateau.z,self.plateau.v,self.plateau.a)
-        self.bille.set_etape(Etape.CHOC)
-        self.tick(tf)
-        self.evenements.append([Etape.CHOC.name,tf,self.bille,self.plateau])
+        self.tick(ti,tf)
+        # print("bille et plateau",self.bille.z,self.plateau.z)
 
-        if (self.bille.v)<(self.plateau.v) or (tf-ti)<10e-2:
+        self.bille.set_etape(Etape.CHOC)
+        # print("avant choc v=",self.bille.v)
+        self.tick(ti,tf)
+        # print("apres choc v=",self.bille.v)
+        self.evenements.append([Etape.CHOC.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
+
+        if (self.bille.v)<=(self.plateau.v) :
+            # or (tf-ti)<1e-2
+            
+            self.evenements.pop()
+            tf=self.evenements[-1][1]
+            self.evenements[-1][0]=Etape.COLLE.name
+            # self.time=
+            self.evenements[-1][2].z=self.evenements[-1][3].z
+            self.evenements[-1][2].v=self.evenements[-1][3].v
+            self.evenements[-1][2].a=self.evenements[-1][3].a
+            self.evenements[-1][2].set_etape(Etape.COLLE)
             self.bille.set_etape(Etape.COLLE)
-            self.evenements.append([Etape.COLLE.name,tf,self.bille,self.plateau])
+            
         else : 
             self.bille.set_etape(Etape.CHUTE)
-            self.evenements.append([Etape.CHUTE.name,tf,self.bille,self.plateau])
+            self.evenements.append([Etape.CHUTE.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
         return tf
 
     
     def next_step(self,t):
-        
-        print(self.bille.get_etape()," : ", self.time)
-
+        # print(self.evenements[-1][0] , " : ",self.evenements[-1][1] )
+        # self.graphic.render()
         if self.isColle():
             if self.is_decollage():
                 tf=self.zero_colle(t)
-                self.setChute(tf)
+                self.setChute(t,tf)
                 return tf
             else :
                 print("la bille reste collée")
-                self.setColle(t+1)
+                self.setColle(t,t+1)
                 return t+1
         else:                                   #on est en chute libre
             tf= self.setChoc(t)
@@ -137,10 +163,12 @@ class Simulation_engine():
     def create_events(self,nb_events=100):
         for i in range(nb_events):
             self.time=self.next_step(self.time)
+            
+        #TODO self.clean()  
         
-        self.graphic.evenements=self.evenements
+        self.graphic.evenements = self.evenements
     
-    def tick(self,t) :
-        self.plateau.tick(t)
-        self.bille.tick(t,self.plateau.z,self.plateau.v,self.plateau.a)
+    def tick(self,ti,tf) :
+        self.plateau.tick(tf)
+        self.bille.tick(tf-ti,self.plateau.z,self.plateau.v,self.plateau.a)
     
