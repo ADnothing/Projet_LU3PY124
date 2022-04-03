@@ -1,0 +1,10 @@
+Pour le CSV :
+
+F correspond aux fréquences à laquelle sont faites les mesures
+M1, M2 correspondent aux mesures des instabilités de farraday
+seuil_bas correspond au seuil de coalescence
+et marcheurs correspond au seuil des marcheurs
+
+Les données sont données avec leurs incertitudes liés à la lecture.
+
+Faire run main pour avoir tous les graphes ainsi que les données utilisés pour le seuil de Faraday
