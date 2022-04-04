@@ -48,14 +48,6 @@ class Simulation_engine():
             
 
         t -= dt
-        # print("calcul, v=",self.bille.v)
-        # time=np.arange(0,t+np.pi/(self.plateau.w*4),dt)
-        # plt.plot(time+ti,self.plateau.traj_r(time+ti))
-        # plt.plot(time+ti,self.bille.traj_r(time,self.plateau.traj_r(time+ti)))
-        # plt.scatter(ti+t,self.bille.traj_r(t,self.plateau.traj_r(time+ti)))
-        # plt.grid()
-        # plt.title("tf="+str(t)+"vb0="+str(self.bille.v)+"vp0="+str(self.plateau.v) )
-        # plt.show()
         return t+ti
 
     def func2(self, ti,t):
@@ -65,39 +57,19 @@ class Simulation_engine():
         
     # retourne le momoent de décollage
     def zero_colle(self,ti, dt=epsilon_t):
-        # t=0
-        # res=-1
-        # while (res<0 and (t < 10*np.pi*2/self.plateau.w)):
-        #     t +=dt
-        #     res = self.func2(ti,t)
-        #     print(res)
-            
-
-        # t -= dt
-        # return  ti + t*
-                
 
         beta= math.acos(g_CST/(self.plateau.A*self.plateau.w**2))/self.plateau.w
-        # print(ti)
         k0=np.floor(self.plateau.w*(ti+beta)/(2*np.pi))+1
-        # print(k0)
         tf= np.pi*2*(k0)/(self.plateau.w)-beta
-        # print(tf)
+        return tf
+
+    def zero_max(self,ti):
+
+        k0=np.floor(self.plateau.w*(ti)/(2*np.pi))+1
+        tf= np.pi*2*(k0)/(self.plateau.w)
         return tf
         
-        
-        # alpha= (self.plateau.w*ti) %(2*np.pi)
-        
-        # return  ti + beta
 
-        
-        # if np.sin(alpha)>np.sin(beta):
-        #     beta = np.pi -beta
-        # elif (alpha > beta):
-        #     beta = 2*np.pi +beta
-            
-        # dt= 1/self.plateau.w *(beta)
-        # return ti+dt
  
 
     def setColle(self,ti,tf):
@@ -108,7 +80,7 @@ class Simulation_engine():
     def setChute(self,ti,tf):
         self.tick(ti,tf)
         self.bille.set_etape(Etape.CHUTE)
-        self.evenements.append([Etape.CHUTE.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
+        self.evenements.append([Etape.CHUTE.name,tf,deepcopy(self.bille),deepcopy(self.plateau),self.zero_max(ti)])
         
         #resoudre a=g
         
@@ -139,7 +111,7 @@ class Simulation_engine():
             
         else : 
             self.bille.set_etape(Etape.CHUTE)
-            self.evenements.append([Etape.CHUTE.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
+            self.evenements.append([Etape.CHUTE.name,tf,deepcopy(self.bille),deepcopy(self.plateau),self.zero_max(ti)])
         return tf
 
     
