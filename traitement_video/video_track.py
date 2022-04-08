@@ -6,8 +6,8 @@ from moviepy.video.io.VideoFileClip import VideoFileClip
 
 import matplotlib.pyplot as plt
 
-clip = VideoFileClip("20220211_175425.mp4")
-clip = clip.subclip(6.5, 15)
+clip = VideoFileClip("chaos.mp4")
+# clip = clip.subclip(2, 10)
  
 
 
@@ -36,10 +36,10 @@ cropped_clip = crop(clip, width=croppingwidth, height=h/2, x_center=croppingx, y
 
 
 
-tracking= Trajectory.load_list("tracking2.txt")[0]
-plt.plot(tracking.tt,tracking.yy)
+# tracking= Trajectory.load_list("tracking2.txt")[0]
+# plt.plot(tracking.tt,tracking.yy)
 
-cropped_clip.write_videofile('goutte.mp4')
+cropped_clip.write_videofile('chaos_cropped.mp4')
 
 
 

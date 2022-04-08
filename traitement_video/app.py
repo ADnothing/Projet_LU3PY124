@@ -35,7 +35,7 @@ if __name__ == '__main__' :
             tracker = cv2.TrackerCSRT_create()
  
     # Read video
-    video = cv2.VideoCapture("goutte.mp4")
+    video = cv2.VideoCapture("2_r_cropped.mp4")
     #video = cv2.VideoCapture(0) # for using CAM
  
     # Exit if video not opened.
@@ -59,7 +59,7 @@ if __name__ == '__main__' :
     ok = tracker.init(frame, bbox)
     xs=[]
     ys=[]
-    t=[0]
+    t=[]
     while True:
         # Read a new frame
         ok, frame = video.read()
@@ -84,9 +84,12 @@ if __name__ == '__main__' :
             
             y = p1[1]
             x =p1[0]
-            xs.append(x)
-            ys.append(y)
-            t.append(t[-1]+1)
+            
+            if (video.get(cv2.CAP_PROP_POS_MSEC) !=0.0):
+                xs.append(x)
+                ys.append(y)
+                t.append(video.get(cv2.CAP_PROP_POS_MSEC))
+
             
         else :
             # Tracking failure
@@ -105,9 +108,8 @@ if __name__ == '__main__' :
             break
     video.release()
     cv2.destroyAllWindows()
-    t.pop()
 
     plt.plot(t,ys)
     plt.show()
-    # np.savez("y.npz",np.array(ys))
-    np.savez("t.npz",np.array(t))
+    np.savez("yc_reflet.npz",np.array(ys))
+    np.savez("tc.npz",np.array(t))
