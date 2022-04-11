@@ -28,7 +28,7 @@ class Graphic_engine():
         
    
         
-    def calcul(self, plot=True):
+    def calcul(self, plot=False):
         z_bs=[]
         t_tots=[]
         z_ps=[]
@@ -36,7 +36,8 @@ class Graphic_engine():
         dif_zp_zb=[]
         nb_event=len(self.evenements)-1
 
-        for i in range(int(np.ceil(2*nb_event/3)),nb_event):
+        # for i in range(int(np.ceil(2*nb_event/3)),nb_event):
+        for i in range(10,nb_event):
             ti=self.evenements[i][1]
             tf=self.evenements[i+1][1]
             t=np.arange(ti,tf,self.dt)
@@ -59,7 +60,7 @@ class Graphic_engine():
                 # plt.plot(t,z_b,c="k",label="bille")
                 # plt.plot(t,plateau.z,c="r",label="plateau")
                 
-        # plt.show()
+        plt.show()
 
                 
         t2=np.concatenate((self.t_maxi[1:],[0]))
@@ -70,7 +71,48 @@ class Graphic_engine():
             plt.scatter(self.dt,self.z_maxi,marker=".")
             plt.show()
 
-        return self.z_maxi, self.dt,self.z_bs , self.z_plateau, self.t_tot
+        return self.z_maxi[:-1], self.dt[:-1],self.z_bs , self.z_plateau, self.t_tot
+    
+    
+    
+    def attracteur(self):
+        z_bs=[]
+        t_tots=[]
+        z_ps=[]
+        z_b=[]
+        dif_zp_zb=[]
+        nb_event=len(self.evenements)-1
+
+        # for i in range(int(np.ceil(2*nb_event/3)),nb_event):
+        for i in range(10,nb_event):
+            ti=self.evenements[i][1]
+            tf=self.evenements[i+1][1]
+            t=np.arange(ti,tf,self.dt)
+            t_res=t-ti
+            plateau=self.evenements[i][3]
+            bille=self.evenements[i][2]
+            
+            plateau.tick(t)
+            z_b=bille.traj_r(t_res,plateau.z)
+            if (self.evenements[i][0] =='CHUTE'):
+                dif_zp_zb=z_b-plateau.z
+                idx=np.argmax(dif_zp_zb)
+
+                self.z_maxi.append(dif_zp_zb[idx])
+                self.t_maxi.append(t[idx])
+                # plt.plot(t,z_b,c="k",label="bille")
+                # plt.plot(t,plateau.z,c="r",label="plateau")
+                
+        plt.show()
+
+                
+        t2=np.concatenate((self.t_maxi[1:],[0]))
+        self.dt=t2-self.t_maxi
+
+        # self.dt=self.dt[]
+
+
+        return self.z_maxi[:-1], self.dt[:-1]
         
 
     

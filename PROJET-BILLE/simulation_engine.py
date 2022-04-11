@@ -135,6 +135,8 @@ class Simulation_engine():
     def create_events(self,nb_events=100):
         for i in range(nb_events):
             self.time=self.next_step(self.time)
+            if(i % 500 ==0):
+                print('===================='+str(i))
             
         #TODO self.clean()  
         
