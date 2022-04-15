@@ -3,7 +3,6 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
  
 if __name__ == '__main__' :

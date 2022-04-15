@@ -8,7 +8,6 @@ Created on Mon Apr  4 17:25:56 2022
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 scaling= 4/(615-35)
 t=np.load("t2.npz")
 y_reflet=np.load("y2_reflet.npz")

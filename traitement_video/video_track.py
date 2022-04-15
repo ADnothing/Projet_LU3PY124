@@ -11,7 +11,6 @@ clip = VideoFileClip("chaos.mp4")
  
 
 
-
 (w, h) = clip.size
 
 cropping = manual_tracking(clip, t1=0, t2=1, fps=2,nobjects=1, savefile="cropping.txt")
