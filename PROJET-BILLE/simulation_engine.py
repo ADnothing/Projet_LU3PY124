@@ -88,12 +88,9 @@ class Simulation_engine():
         
         tf=self.zero_chute(ti)
         self.tick(ti,tf)
-        # print("bille et plateau",self.bille.z,self.plateau.z)
 
         self.bille.set_etape(Etape.CHOC)
-        # print("avant choc v=",self.bille.v)
         self.tick(ti,tf)
-        # print("apres choc v=",self.bille.v)
         self.evenements.append([Etape.CHOC.name,tf,deepcopy(self.bille),deepcopy(self.plateau)])
 
         if ((self.bille.v)<=(self.plateau.v) ):
@@ -116,8 +113,7 @@ class Simulation_engine():
 
     
     def next_step(self,t):
-        # print(self.evenements[-1][0] , " : ",self.evenements[-1][1] )
-        # self.graphic.render()
+
         if self.isColle():
             if self.is_decollage():
                 tf=self.zero_colle(t)
@@ -135,14 +131,124 @@ class Simulation_engine():
     def create_events(self,nb_events=100):
         for i in range(nb_events):
             self.time=self.next_step(self.time)
-            if(i % 500 ==0):
-                print('===================='+str(i))
+            # if(i % 500 ==0):
+            #     print('===================='+str(i))
             
-        #TODO self.clean()  
         
         self.graphic.evenements = self.evenements
     
     def tick(self,ti,tf) :
         self.plateau.tick(tf)
         self.bille.tick(tf-ti,self.plateau.z,self.plateau.v,self.plateau.a)
+        
+        
+        
+        
+        
+        
+        ######CALCUL ET ANALYSE DE DONNEES##########
+        
+    def bifurcation(self, plot=False):
+        z_bs=[]
+        z_plateau=[]
+        z_maxi=[]
+        t_tots=[]
+        t_maxi=[]
+        z_b=[]
+        dif_zp_zb=[]
+        nb_event=len(self.evenements)-1
+
+        for i in range(int(np.ceil(2*nb_event/3)),nb_event):
+            ti=self.evenements[i][1]
+            tf=self.evenements[i+1][1]
+            t=np.arange(ti,tf,self.dt)
+            t_res=t-ti
+            plateau=self.evenements[i][3]
+            bille=self.evenements[i][2]
+            
+            plateau.tick(t)
+            z_b=bille.traj_r(t_res,plateau.z)
+            z_bs=np.concatenate((z_bs, z_b))
+            t_tots=np.concatenate((t_tots, t))
+            z_plateau=np.concatenate((z_plateau, plateau.z))
+            
+            if (self.evenements[i][0] =='CHUTE'):
+                dif_zp_zb=z_b-plateau.z
+                idx=np.argmax(dif_zp_zb)
+
+                z_maxi.append(dif_zp_zb[idx])
+                t_maxi.append(t[idx])
+                # plt.plot(t,z_b,c="k",label="bille")
+                # plt.plot(t,plateau.z,c="r",label="plateau")
+                
+        plt.show()
+
+                
+        t2=np.concatenate((t_maxi[1:],[0]))
+        delta_t=t2-t_maxi
+
+        # self.dt=self.dt[]
+        if (plot):
+            plt.scatter(delta_t,z_maxi,marker=".")
+            plt.show()
+
+        return z_maxi[:-1], delta_t[:-1],z_bs
     
+    
+    
+    def attracteur(self):
+        z_maxi=[]
+        t_maxi=[]
+        z_b=[]
+        dif_zp_zb=[]
+        nb_event=len(self.evenements)-1
+
+        for i in range(10,nb_event):
+            ti=self.evenements[i][1]
+            tf=self.evenements[i+1][1]
+            t=np.arange(ti,tf,self.dt)
+            t_res=t-ti
+            plateau=self.evenements[i][3]
+            bille=self.evenements[i][2]
+            
+            plateau.tick(t)
+            z_b=bille.traj_r(t_res,plateau.z)
+            if (self.evenements[i][0] =='CHUTE'):
+                dif_zp_zb=z_b-plateau.z
+                idx=np.argmax(dif_zp_zb)
+
+                z_maxi.append(dif_zp_zb[idx])
+                t_maxi.append(t[idx])
+                # plt.plot(t,z_b,c="k",label="bille")
+                # plt.plot(t,plateau.z,c="r",label="plateau")
+                
+        plt.show()
+
+                
+        t2=np.concatenate((t_maxi[1:],[0]))
+        delta_t=t2-t_maxi
+
+
+        return z_maxi[:-1], delta_t[:-1]
+    
+    def calc_traj_tot(self):
+        z_bs=[]
+        t_tots=[]
+        z_b=[]
+        nb_event=len(self.evenements)-1
+        for i in range(nb_event):
+            ti=self.evenements[i][1]
+            tf=self.evenements[i+1][1]
+            t=np.arange(ti,tf,self.dt)
+            t_res=t-ti
+            plateau=self.evenements[i][3]
+            bille=self.evenements[i][2]
+            
+            plateau.tick(t)
+            z_b=bille.traj_r(t_res,plateau.z)
+            z_bs=np.concatenate((z_bs, z_b))
+            t_tots=np.concatenate((t_tots, t))
+            
+        return z_bs
+    
+        

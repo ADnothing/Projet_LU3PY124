@@ -8,45 +8,37 @@ from library import *
 from simulation_engine import Simulation_engine
 from scipy.optimize import fsolve
 
-# MyEngine=Simulation_engine(a=0.600e-3,f=30,vi=0.9,ei=Etape.CHUTE,zi=0.600e-3)
-MyEngine=Simulation_engine(a=0.465e-3,f=30,vi=-0.3,ei=Etape.CHUTE,zi=6e-3)
-MyEngine.create_events(3000)
-hmean, dtmean=MyEngine.graphic.attracteur()
-plt.xlim(0.03,0.035)
-plt.plot(dtmean, hmean, ',')
+def attracteur_render ():
+    MyEngine=Simulation_engine(a=0.465e-3,f=30,vi=-0.3,ei=Etape.CHUTE,zi=6e-3)
+    MyEngine.create_events(300)
+    hmean, dtmean=MyEngine.attracteur()
+    # plt.xlim(0.03,0.035)
+    plt.plot(dtmean, hmean, ',')
+    plt.show()
+    return dtmean,hmean
 
+def bifurcation_render():
+    amplitudex=[]
+    h=[]
+    j=1
+    
+    for amplitude in np.linspace(0.280e-3,0.600e-3, 10):
+        print('===================='+str(j))
+        MyEngine=Simulation_engine(a=amplitude,f=30)
+    
+        MyEngine.create_events(200)
+        hmean, dtmean, z_bs =MyEngine.bifurcation()
+        for i in range(len(hmean)):
+            amplitudex.append(amplitude)
+            h.append(hmean[i])
+        j=j+1
+        for i in range(len(dtmean)):
+            amplitudex.append(amplitude)
+            h.append(hmean[i])
+    plt.plot(amplitudex, h, ',')
+    plt.show()
+    
+    return amplitudex , h
 
-# freqx=[]
-# h=[]
-# dt=[]
-# j=1
-# # <<<<<<< Updated upstream
-# # for freq in np.linspace(0.435e-3,0.4600e-3, 100):
-# #     print('===================='+str(j))
-# #     MyEngine=Simulation_engine(a=freq,f=30,vi=-0.3,ei=Etape.CHUTE,zi=6e-3)
-# #     MyEngine.create_events(200)
-# #     hmean, dtmean, z_bs, z_p, ttot=MyEngine.graphic.calcul(False)
-# #     # MyEngine.graphic.render()
-# # =======
-# for freq in np.linspace(0.280e-3,0.600e-3, 5000):
-#     print('===================='+str(j))
-#     MyEngine=Simulation_engine(a=freq,f=30)
-
-#     MyEngine.create_events(400)
-#     hmean, dtmean, z_bs, z_p, ttot =MyEngine.graphic.calcul()
-#     for i in range(len(hmean)):
-#         freqx.append(freq)
-#         h.append(hmean[i])
-#     j=j+1
-#     for i in range(len(dtmean)):
-#         freqx.append(freq)
-#         dt.append(dtmean[i]*freq)
-#         h.append(hmean[i])
-
-# # plt.plot(freqx, h,".")
-# # plt.show()
-# # #plt.scatter(freqx, dt)
-# # =======
-# print(i)
-
-# plt.plot(freqx, h, ',')
+attracteur_render()
+bifurcation_render()
