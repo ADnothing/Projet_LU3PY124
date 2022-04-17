@@ -17,3 +17,4 @@ class Etape(Enum):
 
 epsilon_t = 5e-6
 g_CST = 9.81     #m/s² 
+
