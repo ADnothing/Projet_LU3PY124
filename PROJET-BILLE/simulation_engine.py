@@ -249,6 +249,6 @@ class Simulation_engine():
             z_bs=np.concatenate((z_bs, z_b))
             t_tots=np.concatenate((t_tots, t))
             
-        return z_bs
+        return z_bs,t_tots
     
         
