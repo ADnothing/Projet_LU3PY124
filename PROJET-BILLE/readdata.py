@@ -12,8 +12,10 @@ h=np.load("h.npz")
 f=f.f.arr_0
 h=h.f.arr_0
 
-# plt.xlim(0.0004714,0.0004716)
-plt.plot(f, h, ',',alpha=0.02)
+plt.xlim(0.448e-3,0.456e-3)
+plt.plot(f, h, ',')
+
+# plt.plot(f, h, ',',alpha=0.02)
 
 
 

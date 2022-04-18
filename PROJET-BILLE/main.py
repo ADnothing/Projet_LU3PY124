@@ -8,12 +8,12 @@ from library import *
 from simulation_engine import Simulation_engine
 from scipy.optimize import fsolve
 
-def attracteur_render ():
-    MyEngine=Simulation_engine(a=0.465e-3,f=30,vi=-0.3,ei=Etape.CHUTE,zi=6e-3)
-    MyEngine.create_events(300)
-    hmean, dtmean=MyEngine.attracteur()
+def attracteur_render (a=0.460e-3):
+    MyEngine=Simulation_engine(a=a,f=30,vi=-0.3,ei=Etape.CHUTE,zi=6e-3) # conditions initiales de simulation
+    MyEngine.create_events(1000)
+    hmean, dtmean=MyEngine.attracteur() #on calcule l'attracteur étrange sur la base des 1000 evenements calculés
     # plt.xlim(0.03,0.035)
-    plt.plot(dtmean, hmean, ',')
+    plt.plot(dtmean, hmean, ',')    #affichage de l'attracteur
     plt.show()
     return dtmean,hmean
 
@@ -23,18 +23,16 @@ def bifurcation_render():
     j=1
     
     for amplitude in np.linspace(0.400e-3,0.600e-3, 10):
-        print('===================='+str(j))
-        MyEngine=Simulation_engine(a=amplitude,f=30)
+        print('===================='+str(j))                #permet de connaitre l'avancement des simulations
+        MyEngine=Simulation_engine(a=amplitude,f=30)        #on genere pour une simulation pour chaque amplitude à etudier
     
         MyEngine.create_events(200)
-        hmean, dtmean, z_bs =MyEngine.bifurcation()
+        hmean, dtmean, z_bs =MyEngine.bifurcation()         #on enregistre toutes les hauteurs liées à une amplitude
         for i in range(len(hmean)):
-            amplitudex.append(amplitude)
+            amplitudex.append(amplitude)    
             h.append(hmean[i])
         j=j+1
-        for i in range(len(dtmean)):
-            amplitudex.append(amplitude)
-            h.append(hmean[i])
+
     plt.plot(amplitudex, h, ',')
     plt.show()
     
@@ -120,8 +118,38 @@ def Lyapunov ():
 #     plt.show()
     
 
-
+########### DIAGRAMME DE BIFURCATION ###############
 # amplitudex , h=bifurcation_render()
+
+########### EXPOSANT DE LYAPUNOV ###################
 # As,Lyap=Lyapunov()
-plot_lyapunov_bifurcation(As,Lyap,amplitudex,h)
+
+
+# plot_lyapunov_bifurcation(As,Lyap,amplitudex,h)
+
+########## CALCUL DE LA  PERIODICITE DES TRAJECTOIRES POUR 4 REGIMES DIFFERENTS ############
+
+# #1REBOND
+MyEngine=Simulation_engine(a=0.350e-3,f=30,vi=-0.3,ei=Etape.CHUTE,zi=6e-3)
+
+# #2REBONDS
+# MyEngine=Simulation_engine(a=0.425e-3,f=30,vi=-0.3,ei=Etape.CHUTE,zi=6e-3)
+
+# #4REBONDS
+# MyEngine=Simulation_engine(a=0.448e-3,f=30,vi=-0.3,ei=Etape.CHUTE,zi=6e-3)
+
+# #CHAOTIQUE
+# MyEngine=Simulation_engine(a=0.470e-3,f=30,vi=-0.3,ei=Etape.CHUTE,zi=6e-3)
+
+nb_event=30
+MyEngine.create_events(nb_event)
+
+
+# mean,std=MyEngine.calc_periode(4)
+MyEngine.graphic.render()
+
+# print(mean)
+# print(std)
+# print(abs(mean-4/30))
+# print(mean*30)
 

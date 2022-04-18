@@ -22,21 +22,24 @@ class Bille():
         
         self.trajTab_return=[] # pour rendre une trajectoire
         
-    
+    #trajectoire  de la bille dans l'etat colle
     def trajcolle(self,t, z, v, a):
          self.z=z
          self.v=v
          self.a=a
          
+    #trajectoire  de la bille dans l'etat chute
     def trajchute(self,t, z, v, a):
         self.z= -g_CST/2*t**2+self.v*t+self.z
         self.v= -g_CST*t+self.v
         self.a= -g_CST
         
+    #trajectoire  de la bille dans l'etat chute
     def trajchoc(self,t, z, v, a):
         self.z= z
         self.v= v-self.mu*(self.v-v)
         
+######trajectoires qui retournent un resultat plutot que d'actualiser l'etat de l'objet bille
     def trajcolle_r(self,t, z):
            return z
             
@@ -48,7 +51,7 @@ class Bille():
     def trajchoc_r(self,t, z):
         return z
 
-    
+    ###initialisation du tableau des etats qui sera manipulé à chaque transition d'etat
     def init(self):
         
         self.trajTab_return.append(self.trajcolle_r)
@@ -67,11 +70,14 @@ class Bille():
     def get_etape(self):
         return self.etape.name
     
+    #transition d'etat
     def set_etape(self,nouvelle_etape):
         self.etape= nouvelle_etape
-        self.traj=self.trajTab[nouvelle_etape.value-1]
+        #les methodes de calcul des trajectoires changent
+        self.traj=self.trajTab[nouvelle_etape.value-1]  
         self.traj_r =self.trajTab_return[nouvelle_etape.value-1]
     
+    #tout ce qu'il y a a faire lorsque l'on avance d'un pas de temps
     def tick(self, t, z, v, a) :
         self.traj(t,z,v,a)
         

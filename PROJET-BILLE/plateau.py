@@ -14,13 +14,17 @@ class Plateau():
         self.A=amplitude  #amplitude en m
         self.w=2*np.pi*frequence  #frequence en Hz
         
+        # calcule la trajectoire du plateau pour un temps t donné
     def tick(self,t):
         self.a= -self.A * self.w**2  * np.cos(self.w*t)
         self.v=-self.A*self.w *np.sin(self.w*t)
         self.z= self.A*np.cos(self.w*t)
         
+        #permet de retourner la trajectoire du plateau
+        
     def traj_r(self,t):
         return self.A*np.cos(self.w*t)
-    
+    #permet de retourner l'acceleration du plateau
+
     def a_r(self,t):
         return -self.A * self.w**2  * np.cos(self.w*t)
